@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense List - Cash Manager{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Expense Records</h1>
+            <p class="text-gray-600 mt-2">Track all your spending</p>
+        </div>
+        <a href="{% url 'add_expense' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+            <i class="fas fa-plus mr-2"></i>Add Expense
+        </a>
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+            <p class="text-gray-600 text-sm font-semibold">Total Expenses</p>
+            <p class="text-3xl font-bold text-red-600 mt-2">৳{{ total|floatformat:2 }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <p class="text-gray-600 text-sm font-semibold">Number of Entries</p>
+            <p class="text-3xl font-bold text-blue-600 mt-2">{{ expenses|length }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+            <p class="text-gray-600 text-sm font-semibold">Average Expense</p>
+            <p class="text-3xl font-bold text-purple-600 mt-2">৳{{ average|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="GET" class="flex gap-4">
+            <div class="flex-1 relative">
+                <i class="fas fa-search absolute left-4 top-3 text-gray-400"></i>
+                <input type="text" name="q" class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
+                       placeholder="Search expenses..." value="{{ search_query }}">
+            </div>
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                <i class="fas fa-search"></i>
+            </button>
+            {% if search_query %}
+                <a href="{% url 'expense_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-times"></i>
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        {% if expenses %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-100 border-b">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date & Time</th>
+                            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                            <tr class="border-b hover:bg-gray-50 transition">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-arrow-down text-red-600"></i>
+                                        <span class="font-semibold text-gray-800">{{ expense.description|truncatewords:5 }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-lg font-bold text-red-600">৳{{ expense.amount|floatformat:2 }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ expense.datetime|date:"M d, Y H:i" }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <a href="{% url 'delete_expense' expense.pk %}" class="text-red-600 hover:text-red-800 font-semibold transition">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No expenses recorded yet</p>
+                <a href="{% url 'add_expense' %}" class="mt-4 inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                    <i class="fas fa-plus mr-2"></i>Record Your First Expense
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Income List - Cash Manager{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Income Records</h1>
+            <p class="text-gray-600 mt-2">Manage all your income transactions</p>
+        </div>
+        <a href="{% url 'add_cash' %}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+            <i class="fas fa-plus mr-2"></i>Add Cash
+        </a>
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+            <p class="text-gray-600 text-sm font-semibold">Total Income</p>
+            <p class="text-3xl font-bold text-green-600 mt-2">৳{{ total|floatformat:2 }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <p class="text-gray-600 text-sm font-semibold">Number of Entries</p>
+            <p class="text-3xl font-bold text-blue-600 mt-2">{{ cash_additions|length }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+            <p class="text-gray-600 text-sm font-semibold">Average Entry</p>
+            <p class="text-3xl font-bold text-purple-600 mt-2">৳{{ average|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="GET" class="flex gap-4">
+            <div class="flex-1 relative">
+                <i class="fas fa-search absolute left-4 top-3 text-gray-400"></i>
+                <input type="text" name="q" class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" 
+                       placeholder="Search by source or description..." value="{{ search_query }}">
+            </div>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                <i class="fas fa-search"></i>
+            </button>
+            {% if search_query %}
+                <a href="{% url 'cash_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-times"></i>
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        {% if cash_additions %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-100 border-b">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Source</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date & Time</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
+                            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cash in cash_additions %}
+                            <tr class="border-b hover:bg-gray-50 transition">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-arrow-up text-green-600"></i>
+                                        <span class="font-semibold text-gray-800">{{ cash.source }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-lg font-bold text-green-600">৳{{ cash.amount|floatformat:2 }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ cash.datetime|date:"M d, Y H:i" }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ cash.description|truncatewords:5|default:"No description" }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <a href="{% url 'delete_cash' cash.pk %}" class="text-red-600 hover:text-red-800 font-semibold transition">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No income records found</p>
+                <a href="{% url 'add_cash' %}" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                    <i class="fas fa-plus mr-2"></i>Add Your First Income
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
