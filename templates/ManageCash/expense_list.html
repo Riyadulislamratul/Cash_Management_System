@@ -4,99 +4,148 @@
 
 {% block content %}
 <div class="space-y-6">
+
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Expense Records</h1>
-            <p class="text-gray-600 mt-2">Track all your spending</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Expense Records</h1>
+            <p class="text-gray-600 dark:text-gray-300 mt-2">Track all your spending</p>
         </div>
-        <a href="{% url 'add_expense' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+        <a href="{% url 'add_expense' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center">
             <i class="fas fa-plus mr-2"></i>Add Expense
         </a>
     </div>
 
     <!-- Statistics -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-            <p class="text-gray-600 text-sm font-semibold">Total Expenses</p>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow p-6 border-l-4 border-red-500 transition-colors">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-semibold">Total Expenses</p>
             <p class="text-3xl font-bold text-red-600 mt-2">৳{{ total|floatformat:2 }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-            <p class="text-gray-600 text-sm font-semibold">Number of Entries</p>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow p-6 border-l-4 border-blue-500 transition-colors">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-semibold">Number of Entries</p>
             <p class="text-3xl font-bold text-blue-600 mt-2">{{ expenses|length }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
-            <p class="text-gray-600 text-sm font-semibold">Average Expense</p>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow p-6 border-l-4 border-purple-500 transition-colors">
+            <p class="text-gray-600 dark:text-gray-300 text-sm font-semibold">Average Expense</p>
             <p class="text-3xl font-bold text-purple-600 mt-2">৳{{ average|floatformat:2 }}</p>
         </div>
     </div>
 
     <!-- Search Bar -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow p-6 transition-colors">
         <form method="GET" class="flex gap-4">
             <div class="flex-1 relative">
-                <i class="fas fa-search absolute left-4 top-3 text-gray-400"></i>
-                <input type="text" name="q" class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
+                <i class="fas fa-search absolute left-4 top-3 text-gray-400 dark:text-gray-500"></i>
+                <input type="text" name="q" 
+                       class="w-full pl-12 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
                        placeholder="Search expenses..." value="{{ search_query }}">
             </div>
-            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-search"></i>
             </button>
             {% if search_query %}
-                <a href="{% url 'expense_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition">
-                    <i class="fas fa-times"></i>
-                </a>
+            <a href="{% url 'expense_list' %}" class="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-100 font-bold py-2 px-4 rounded-lg transition flex items-center">
+                <i class="fas fa-times"></i>
+            </a>
             {% endif %}
         </form>
     </div>
 
     <!-- Transactions Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow overflow-hidden transition-colors">
         {% if expenses %}
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-100 border-b">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date & Time</th>
-                            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for expense in expenses %}
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center space-x-2">
-                                        <i class="fas fa-arrow-down text-red-600"></i>
-                                        <span class="font-semibold text-gray-800">{{ expense.description|truncatewords:5 }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-lg font-bold text-red-600">৳{{ expense.amount|floatformat:2 }}</span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">
-                                    {{ expense.datetime|date:"M d, Y H:i" }}
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <a href="{% url 'delete_expense' expense.pk %}" class="text-red-600 hover:text-red-800 font-semibold transition">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full" id="expensesTable">
+                <thead class="bg-gray-100 dark:bg-gray-700 border-b">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Description</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Amount</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Date & Time</th>
+                        <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer expense-row"
+                        data-description="{{ expense.description }}"
+                        data-amount="{{ expense.amount }}"
+                        data-date="{{ expense.datetime|date:'M d, Y H:i' }}">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-down text-red-600"></i>
+                                <span class="font-semibold text-gray-800 dark:text-gray-100">{{ expense.description|truncatewords:5 }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-lg font-bold text-red-600">৳{{ expense.amount|floatformat:2 }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ expense.datetime|date:"M d, Y H:i" }}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <a href="{% url 'delete_expense' expense.pk %}" class="text-red-600 hover:text-red-800 font-semibold transition">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="text-center py-12">
-                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
-                <p class="text-gray-600 text-lg">No expenses recorded yet</p>
-                <a href="{% url 'add_expense' %}" class="mt-4 inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
-                    <i class="fas fa-plus mr-2"></i>Record Your First Expense
-                </a>
-            </div>
+        <div class="text-center py-12">
+            <i class="fas fa-inbox text-6xl text-gray-300 dark:text-gray-500 mb-4"></i>
+            <p class="text-gray-600 dark:text-gray-300 text-lg">No expenses recorded yet</p>
+            <a href="{% url 'add_expense' %}" class="mt-4 inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition flex items-center">
+                <i class="fas fa-plus mr-2"></i>Record Your First Expense
+            </a>
+        </div>
         {% endif %}
     </div>
+
 </div>
+
+<!-- Modal -->
+<div id="expenseModal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 max-w-md w-full relative">
+        <button id="closeExpenseModal" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4" id="modalExpenseDescription">Description</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-2"><strong>Amount:</strong> <span id="modalExpenseAmount"></span></p>
+        <p class="text-gray-600 dark:text-gray-300 mb-2"><strong>Date:</strong> <span id="modalExpenseDate"></span></p>
+    </div>
+</div>
+
+<script>
+// Modal functionality
+const expenseRows = document.querySelectorAll('.expense-row');
+const expenseModal = document.getElementById('expenseModal');
+const closeExpenseModalBtn = document.getElementById('closeExpenseModal');
+
+expenseRows.forEach(row => {
+    row.addEventListener('click', () => {
+        document.getElementById('modalExpenseDescription').innerText = row.dataset.description || 'No description';
+        document.getElementById('modalExpenseAmount').innerText = `৳${parseFloat(row.dataset.amount).toFixed(2)}`;
+        document.getElementById('modalExpenseDate').innerText = row.dataset.date;
+        expenseModal.classList.remove('hidden');
+        expenseModal.classList.add('flex');
+    });
+});
+
+closeExpenseModalBtn.addEventListener('click', () => {
+    expenseModal.classList.add('hidden');
+    expenseModal.classList.remove('flex');
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    if(e.target === expenseModal) {
+        expenseModal.classList.add('hidden');
+        expenseModal.classList.remove('flex');
+    }
+});
+</script>
+
 {% endblock %}
