@@ -7,13 +7,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body, main, header, footer, .card, .message { transition: all 0.5s ease; }
+  body, header, footer, .card, .message { transition: all 0.5s ease; }
 </style>
 </head>
+
 <body>
 
-<header id="header" class="px-6 py-4 shadow-2xl">
-  <div class="flex justify-between items-center max-w-7xl mx-auto">
+<!-- Header -->
+<header id="header" class="shadow-2xl px-6 py-4 rounded-b-3xl">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    
+    <!-- Logo -->
     <a href="{% url 'dashboard' %}" class="flex items-center gap-3">
       <div class="w-9 h-9 flex items-center justify-center rounded-xl">
         <i class="fas fa-wallet text-white"></i>
@@ -21,26 +25,41 @@
       <span class="font-bold tracking-wide text-white">Cash Manager</span>
     </a>
 
-    <div class="flex items-center gap-3">
+    <!-- Navigation + Theme + User -->
+    <div class="flex items-center gap-4">
+
+      <!-- Navigation -->
+      <nav class="hidden md:flex gap-2">
+        <a href="{% url 'dashboard' %}" class="px-4 py-2 rounded-xl text-sm text-white">Dashboard</a>
+        <a href="{% url 'cash_list' %}" class="px-4 py-2 rounded-xl text-sm text-white">Cash</a>
+        <a href="{% url 'expense_list' %}" class="px-4 py-2 rounded-xl text-sm text-white">Expenses</a>
+      </nav>
+
+      <!-- Theme Button -->
       <button id="themeBtn" class="w-10 h-10 rounded-xl flex items-center justify-center bg-white/20">
         <i id="themeIcon" class="fas fa-moon text-white"></i>
       </button>
+
+      <!-- User Menu -->
+      <details class="relative">
+        <summary class="list-none cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20">
+          <i class="fas fa-user-circle text-white"></i>
+          <span class="text-sm text-white">{{ user.first_name|default:user.username }}</span>
+          <i class="fas fa-chevron-down text-xs text-white"></i>
+        </summary>
+        <div class="absolute right-0 mt-2 w-44 rounded-2xl bg-white shadow-xl overflow-hidden">
+          <a href="{% url 'logout' %}" class="block px-4 py-3 text-sm hover:bg-gray-100">
+            <i class="fas fa-sign-out-alt text-red-500 mr-2"></i> Logout
+          </a>
+        </div>
+      </details>
+
     </div>
+
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-6 py-10">
-  <div id="contentCard" class="card p-8 rounded-3xl shadow-2xl bg-white">
-    {% block content %}{% endblock %}
-  </div>
-</main>
-
-<footer id="footer" class="px-6 py-12 mt-20 text-white">
-  <div class="max-w-7xl mx-auto text-center">
-    © 2026 Cash Manager. All rights reserved.
-  </div>
-</footer>
-
+<!-- Messages -->
 <div id="messages" class="max-w-7xl mx-auto px-6 mt-6">
   {% if messages %}
     {% for message in messages %}
@@ -54,11 +73,21 @@
   {% endif %}
 </div>
 
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-6 py-10">
+  <div id="contentCard" class="card p-8 rounded-3xl shadow-2xl">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<!-- Footer -->
+<footer id="footer" class="mt-20 px-6 py-12 text-white text-center">
+  © 2026 Cash Manager. All rights reserved.
+</footer>
+
 <script>
 const themeBtn = document.getElementById('themeBtn');
 const themeIcon = document.getElementById('themeIcon');
-
-// Theme elements
 const body = document.body;
 const header = document.getElementById('header');
 const footer = document.getElementById('footer');
@@ -67,28 +96,28 @@ const messages = document.querySelectorAll('.message');
 
 // Light and Dark theme styles
 const lightTheme = {
-  bodyBg: '#ffffff',
-  bodyText: '#1f2937', // gray-900
-  headerBg: 'linear-gradient(to right, #06b6d4, #14b8a6)', // cyan-500 to teal-500
-  footerBg: 'linear-gradient(to right, #0891b2, #14b8a6)', // cyan-600 to teal-600
-  cardBg: '#ffffff',
+  bodyBg: 'white',
+  bodyText: '#1f2937',
+  headerBg: 'linear-gradient(to right, #06b6d4, #14b8a6)',
+  footerBg: 'linear-gradient(to right, #0891b2, #14b8a6)',
+  cardBg: 'white',
   cardText: '#1f2937',
   messageBg: '#d1fae5',
   messageText: '#065f46'
 };
 
 const darkTheme = {
-  bodyBg: '#0f172a', // slate-950
-  bodyText: '#f1f5f9', // gray-100
-  headerBg: 'linear-gradient(to right, #4f46e5, #8b5cf6, #ec4899)', // indigo-600 to purple-600 to pink-600
+  bodyBg: '#0f172a',
+  bodyText: '#f1f5f9',
+  headerBg: 'linear-gradient(to right, #4f46e5, #8b5cf6, #ec4899)',
   footerBg: 'linear-gradient(to right, #4338ca, #7c3aed, #db2777)',
-  cardBg: '#1e293b', // slate-800
+  cardBg: '#1e293b',
   cardText: '#f1f5f9',
   messageBg: 'rgba(16, 185, 129, 0.2)',
   messageText: '#bbf7d0'
 };
 
-// Apply theme function
+// Apply theme
 function applyTheme(theme) {
   body.style.background = theme.bodyBg;
   body.style.color = theme.bodyText;
@@ -102,7 +131,7 @@ function applyTheme(theme) {
   });
 }
 
-// Toggle theme function
+// Toggle theme
 function toggleTheme() {
   if (localStorage.getItem('theme') === 'dark') {
     localStorage.setItem('theme', 'light');
@@ -115,7 +144,7 @@ function toggleTheme() {
   }
 }
 
-// Initialize theme on load
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('theme') === 'dark') {
     themeIcon.className = 'fas fa-sun text-white';
