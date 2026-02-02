@@ -1,111 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Cash Manager{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Cash Manager{% endblock %}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body, main, header, footer, .card, .message { transition: all 0.5s ease; }
+</style>
 </head>
+<body>
 
-<body class="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-gray-950 text-gray-100">
+<header id="header" class="px-6 py-4 shadow-2xl">
+  <div class="flex justify-between items-center max-w-7xl mx-auto">
+    <a href="{% url 'dashboard' %}" class="flex items-center gap-3">
+      <div class="w-9 h-9 flex items-center justify-center rounded-xl">
+        <i class="fas fa-wallet text-white"></i>
+      </div>
+      <span class="font-bold tracking-wide text-white">Cash Manager</span>
+    </a>
 
-{% if user.is_authenticated %}
-<header class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-2xl">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center justify-between h-16">
-
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3">
-                <div class="w-9 h-9 flex items-center justify-center rounded-xl bg-white/20 backdrop-blur">
-                    <i class="fas fa-wallet text-white"></i>
-                </div>
-                <span class="font-bold tracking-wide text-white">Cash Manager</span>
-            </a>
-
-            <nav class="hidden md:flex gap-2">
-                <a href="{% url 'dashboard' %}" class="px-4 py-2 rounded-xl text-sm bg-white/10 hover:bg-white/20 transition">Dashboard</a>
-                <a href="{% url 'cash_list' %}" class="px-4 py-2 rounded-xl text-sm bg-white/10 hover:bg-white/20 transition">Cash</a>
-                <a href="{% url 'expense_list' %}" class="px-4 py-2 rounded-xl text-sm bg-white/10 hover:bg-white/20 transition">Expenses</a>
-            </nav>
-
-            <details class="relative">
-                <summary class="list-none cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition">
-                    <i class="fas fa-user-circle"></i>
-                    <span class="text-sm">{{ user.first_name|default:user.username }}</span>
-                    <i class="fas fa-chevron-down text-xs"></i>
-                </summary>
-                <div class="absolute right-0 mt-2 w-44 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl overflow-hidden">
-                    <a href="{% url 'logout' %}" class="block px-4 py-3 text-sm hover:bg-white/10">
-                        <i class="fas fa-sign-out-alt text-red-400 mr-2"></i> Logout
-                    </a>
-                </div>
-            </details>
-
-        </div>
+    <div class="flex items-center gap-3">
+      <button id="themeBtn" class="w-10 h-10 rounded-xl flex items-center justify-center bg-white/20">
+        <i id="themeIcon" class="fas fa-moon text-white"></i>
+      </button>
     </div>
+  </div>
 </header>
-{% endif %}
-
-{% if messages %}
-<div class="max-w-7xl mx-auto px-6 mt-6">
-    {% for message in messages %}
-    <div class="mb-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-white/10">
-        <div class="flex items-center gap-3">
-            <i class="fas fa-info-circle"></i>
-            <span>{{ message }}</span>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
 
 <main class="max-w-7xl mx-auto px-6 py-10">
-    <div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 shadow-2xl">
-        {% block content %}{% endblock %}
-    </div>
+  <div id="contentCard" class="card p-8 rounded-3xl shadow-2xl bg-white">
+    {% block content %}{% endblock %}
+  </div>
 </main>
 
-<footer class="mt-20 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700">
-    <div class="max-w-7xl mx-auto px-6 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <span class="font-bold text-white">Cash Manager</span>
-                </div>
-                <p class="text-sm text-white/80">
-                    Smart finance tracking with a modern, fast and secure experience.
-                </p>
-            </div>
-
-            <div>
-                <h4 class="font-semibold text-white mb-4">Navigate</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="{% url 'dashboard' %}" class="hover:text-white">Dashboard</a></li>
-                    <li><a href="{% url 'cash_list' %}" class="hover:text-white">Cash</a></li>
-                    <li><a href="{% url 'expense_list' %}" class="hover:text-white">Expenses</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="font-semibold text-white mb-4">Built With</h4>
-                <ul class="space-y-2 text-sm text-white/80">
-                    <li>Django Backend</li>
-                    <li>Tailwind UI</li>
-                    <li>Secure Auth</li>
-                </ul>
-            </div>
-
-        </div>
-
-        <div class="border-t border-white/20 mt-10 pt-6 text-center text-sm text-white/80">
-            © 2026 Cash Manager. All rights reserved.
-        </div>
-    </div>
+<footer id="footer" class="px-6 py-12 mt-20 text-white">
+  <div class="max-w-7xl mx-auto text-center">
+    © 2026 Cash Manager. All rights reserved.
+  </div>
 </footer>
+
+<div id="messages" class="max-w-7xl mx-auto px-6 mt-6">
+  {% if messages %}
+    {% for message in messages %}
+    <div class="message mb-4 p-4 rounded-2xl">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ message }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<script>
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+
+// Theme elements
+const body = document.body;
+const header = document.getElementById('header');
+const footer = document.getElementById('footer');
+const contentCard = document.getElementById('contentCard');
+const messages = document.querySelectorAll('.message');
+
+// Light and Dark theme styles
+const lightTheme = {
+  bodyBg: '#ffffff',
+  bodyText: '#1f2937', // gray-900
+  headerBg: 'linear-gradient(to right, #06b6d4, #14b8a6)', // cyan-500 to teal-500
+  footerBg: 'linear-gradient(to right, #0891b2, #14b8a6)', // cyan-600 to teal-600
+  cardBg: '#ffffff',
+  cardText: '#1f2937',
+  messageBg: '#d1fae5',
+  messageText: '#065f46'
+};
+
+const darkTheme = {
+  bodyBg: '#0f172a', // slate-950
+  bodyText: '#f1f5f9', // gray-100
+  headerBg: 'linear-gradient(to right, #4f46e5, #8b5cf6, #ec4899)', // indigo-600 to purple-600 to pink-600
+  footerBg: 'linear-gradient(to right, #4338ca, #7c3aed, #db2777)',
+  cardBg: '#1e293b', // slate-800
+  cardText: '#f1f5f9',
+  messageBg: 'rgba(16, 185, 129, 0.2)',
+  messageText: '#bbf7d0'
+};
+
+// Apply theme function
+function applyTheme(theme) {
+  body.style.background = theme.bodyBg;
+  body.style.color = theme.bodyText;
+  header.style.background = theme.headerBg;
+  footer.style.background = theme.footerBg;
+  contentCard.style.background = theme.cardBg;
+  contentCard.style.color = theme.cardText;
+  messages.forEach(msg => {
+    msg.style.background = theme.messageBg;
+    msg.style.color = theme.messageText;
+  });
+}
+
+// Toggle theme function
+function toggleTheme() {
+  if (localStorage.getItem('theme') === 'dark') {
+    localStorage.setItem('theme', 'light');
+    themeIcon.className = 'fas fa-moon text-white';
+    applyTheme(lightTheme);
+  } else {
+    localStorage.setItem('theme', 'dark');
+    themeIcon.className = 'fas fa-sun text-white';
+    applyTheme(darkTheme);
+  }
+}
+
+// Initialize theme on load
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('theme') === 'dark') {
+    themeIcon.className = 'fas fa-sun text-white';
+    applyTheme(darkTheme);
+  } else {
+    themeIcon.className = 'fas fa-moon text-white';
+    applyTheme(lightTheme);
+  }
+
+  themeBtn.addEventListener('click', toggleTheme);
+});
+</script>
 
 </body>
 </html>
