@@ -33,7 +33,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Name_ID_ManageCash.urls'
+ROOT_URLCONF = 'CashManagement.urls'
 
 TEMPLATES = [
     {
@@ -51,7 +51,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Name_ID_ManageCash.wsgi.application'
+WSGI_APPLICATION = 'CashManagement.wsgi.application'
 
 DATABASES = {
     'default': {
