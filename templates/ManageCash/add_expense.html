@@ -3,64 +3,208 @@
 {% block title %}Add Expense - Cash Manager{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Add Expense</h1>
-            <p class="text-gray-600">Record money you have spent</p>
+<div class="min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-white py-12 px-4">
+    <div class="max-w-5xl mx-auto grid lg:grid-cols-3 gap-8">
+        
+        <!-- Form Card -->
+        <div class="lg:col-span-2 bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 px-8 py-8 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-10 -mb-10"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-shopping-cart text-2xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold">Add Expense</h1>
+                    </div>
+                    <p class="text-red-100 text-lg">Record money you have spent</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form method="POST" class="p-8 space-y-8">
+                {% csrf_token %}
+
+                <!-- Description -->
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-receipt text-red-500"></i>
+                        Expense Description
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
+                            <i class="fas fa-pen"></i>
+                        </span>
+                        <textarea name="description" rows="4" required
+                                  class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 resize-none"
+                                  placeholder="e.g., Grocery shopping, Restaurant, Gas, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Amount -->
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-money-bill-wave text-red-500"></i>
+                        Amount
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-lg group-focus-within:text-red-500 transition-colors">৳</span>
+                        <input type="number" name="amount" step="0.01" required
+                               class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 text-lg font-semibold"
+                               placeholder="0.00">
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-tags text-red-500"></i>
+                        Category
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
+                            <i class="fas fa-folder"></i>
+                        </span>
+                        <select name="category" class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-red-500 transition-all text-gray-800 appearance-none cursor-pointer">
+                            <option value="">Select a category</option>
+                            <option value="food">🍔 Food & Dining</option>
+                            <option value="transport">🚗 Transportation</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="bills">📱 Bills & Utilities</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="health">💊 Health & Medical</option>
+                            <option value="education">📚 Education</option>
+                            <option value="other">📦 Other</option>
+                        </select>
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Quick Amount Buttons -->
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-bolt text-red-500"></i>
+                        Quick Amount
+                    </label>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" onclick="setAmount(100)" class="px-5 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-all">৳100</button>
+                        <button type="button" onclick="setAmount(500)" class="px-5 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-all">৳500</button>
+                        <button type="button" onclick="setAmount(1000)" class="px-5 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-all">৳1,000</button>
+                        <button type="button" onclick="setAmount(5000)" class="px-5 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-all">৳5,000</button>
+                        <button type="button" onclick="clearAmount()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg font-semibold hover:bg-gray-200 transition-all">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                        <i class="fas fa-check-circle mr-2"></i> Save Expense
+                    </button>
+                    <a href="{% url 'dashboard' %}"
+                       class="flex-1 border-2 border-gray-200 py-4 rounded-xl text-center font-semibold text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all">
+                        <i class="fas fa-times mr-2"></i> Cancel
+                    </a>
+                </div>
+            </form>
         </div>
 
-        <form method="POST" class="space-y-6">
-            {% csrf_token %}
+        <!-- Tips Panel -->
+        <div class="space-y-6">
+            <!-- Main Tips Card -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 h-fit">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center mr-3">
+                        <i class="fas fa-lightbulb text-red-500"></i>
+                    </div>
+                    Smart Tips
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 p-3 bg-red-50 rounded-xl">
+                        <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-check text-red-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Be Specific</p>
+                            <p class="text-sm text-gray-500">Clearly describe your expense details</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-tags text-blue-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Use Categories</p>
+                            <p class="text-sm text-gray-500">Group expenses for better analysis</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3 bg-purple-50 rounded-xl">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-bolt text-purple-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Quick Entry</p>
+                            <p class="text-sm text-gray-500">Use quick buttons for common amounts</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Expense Description</label>
-                <div class="relative">
-                    <i class="fas fa-receipt absolute left-4 top-3 text-gray-400"></i>
-                    <textarea name="description" class="w-full pl-12 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" 
-                              placeholder="e.g., Grocery shopping, Restaurant, Gas, etc." rows="3" required></textarea>
+            <!-- Monthly Stats Card -->
+            <div class="bg-gradient-to-br from-red-500 via-rose-500 to-pink-600 rounded-2xl shadow-lg p-6 text-white">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-line mr-2"></i> This Month
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="opacity-80">Total Expenses</span>
+                        <span class="text-2xl font-bold">৳0.00</span>
+                    </div>
+                    <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                        <div class="h-full bg-white rounded-full w-2/3"></div>
+                    </div>
+                    <p class="text-sm opacity-70">Track your spending wisely!</p>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Amount</label>
-                <div class="relative">
-                    <span class="absolute left-4 top-3 text-gray-600 font-semibold">৳</span>
-                    <input type="number" name="amount" class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" 
-                           placeholder="0.00" step="0.01" required>
+            <!-- Quick Links -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
+                <div class="space-y-2">
+                    <a href="{% url 'expense_list' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition-colors text-gray-700">
+                        <i class="fas fa-list text-red-500 w-6"></i>
+                        <span>View All Expenses</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="{% url 'add_cash' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors text-gray-700">
+                        <i class="fas fa-plus-circle text-green-500 w-6"></i>
+                        <span>Add Income</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors text-gray-700">
+                        <i class="fas fa-home text-blue-500 w-6"></i>
+                        <span>Back to Dashboard</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
-                    <i class="fas fa-check-circle mr-2"></i>Save Expense
-                </button>
-                <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-200 text-center">
-                    <i class="fas fa-times mr-2"></i>Cancel
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <!-- Tips Section -->
-    <div class="bg-red-50 rounded-lg p-6 mt-8 border border-red-200">
-        <h3 class="text-lg font-semibold text-red-800 mb-4">
-            <i class="fas fa-lightbulb mr-2"></i>Tips for Recording Expenses
-        </h3>
-        <ul class="space-y-2 text-red-700">
-            <li class="flex items-start">
-                <i class="fas fa-check-circle mr-3 mt-1"></i>
-                <span>Describe the expense category clearly</span>
-            </li>
-            <li class="flex items-start">
-                <i class="fas fa-check-circle mr-3 mt-1"></i>
-                <span>Include item details for better tracking (e.g., "Milk, Bread, Eggs - Market")</span>
-            </li>
-            <li class="flex items-start">
-                <i class="fas fa-check-circle mr-3 mt-1"></i>
-                <span>Enter exact expense amounts immediately</span>
-            </li>
-        </ul>
     </div>
 </div>
+
+<script>
+function setAmount(amount) {
+    document.querySelector('input[name="amount"]').value = amount;
+}
+
+function clearAmount() {
+    document.querySelector('input[name="amount"]').value = '';
+}
+</script>
 {% endblock %}
