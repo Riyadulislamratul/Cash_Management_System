@@ -3,16 +3,25 @@
 {% block title %}Add Income - Cash Manager{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-white py-16 px-4">
-    <div class="max-w-4xl mx-auto grid lg:grid-cols-3 gap-8">
-
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-12 px-4">
+    <div class="max-w-5xl mx-auto grid lg:grid-cols-3 gap-8">
+        
         <!-- Form Card -->
-        <div class="lg:col-span-2 bg-white/80 backdrop-blur rounded-2xl shadow-xl overflow-hidden">
+        <div class="lg:col-span-2 bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
             
             <!-- Header -->
-            <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-6 text-white">
-                <h1 class="text-2xl font-bold">Add Income</h1>
-                <p class="text-sm opacity-90">Record money you have received</p>
+            <div class="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 px-8 py-8 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-10 -mb-10"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-wallet text-2xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold">Add Income</h1>
+                    </div>
+                    <p class="text-green-100 text-lg">Record money you have received</p>
+                </div>
             </div>
 
             <!-- Form -->
@@ -20,80 +29,171 @@
                 {% csrf_token %}
 
                 <!-- Source -->
-                <div class="relative">
-                    <input type="text" name="source" required
-                           class="peer w-full px-4 pt-5 pb-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none"
-                           placeholder=" ">
-                    <label class="absolute left-4 top-2 text-sm text-gray-500 transition-all
-                                  peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base
-                                  peer-placeholder-shown:text-gray-400
-                                  peer-focus:top-2 peer-focus:text-sm peer-focus:text-green-600">
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-briefcase text-green-500"></i>
                         Income Source
                     </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-500 transition-colors">
+                            <i class="fas fa-tag"></i>
+                        </span>
+                        <input type="text" name="source" required
+                               class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-green-500 transition-all text-gray-800 placeholder-gray-400"
+                               placeholder="e.g., Salary, Freelance Work, Business">
+                    </div>
                 </div>
 
                 <!-- Amount -->
-                <div class="relative">
-                    <span class="absolute left-4 top-4 text-gray-500 font-semibold">৳</span>
-                    <input type="number" name="amount" step="0.01" required
-                           class="peer w-full pl-10 pr-4 pt-5 pb-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none"
-                           placeholder=" ">
-                    <label class="absolute left-10 top-2 text-sm text-gray-500 transition-all
-                                  peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base
-                                  peer-placeholder-shown:text-gray-400
-                                  peer-focus:top-2 peer-focus:text-sm peer-focus:text-green-600">
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-money-bill-wave text-green-500"></i>
                         Amount
                     </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-lg group-focus-within:text-green-500 transition-colors">৳</span>
+                        <input type="number" name="amount" step="0.01" required
+                               class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-green-500 transition-all text-gray-800 placeholder-gray-400 text-lg font-semibold"
+                               placeholder="0.00">
+                    </div>
                 </div>
 
                 <!-- Description -->
-                <div class="relative">
-                    <textarea name="description" rows="4"
-                              class="peer w-full px-4 pt-5 pb-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none"
-                              placeholder=" "></textarea>
-                    <label class="absolute left-4 top-2 text-sm text-gray-500 transition-all
-                                  peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base
-                                  peer-placeholder-shown:text-gray-400
-                                  peer-focus:top-2 peer-focus:text-sm peer-focus:text-green-600">
-                        Description (optional)
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-align-left text-green-500"></i>
+                        Description <span class="text-gray-400 font-normal">(optional)</span>
                     </label>
+                    <div class="relative">
+                        <textarea name="description" rows="4"
+                                  class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-green-500 transition-all text-gray-800 placeholder-gray-400 resize-none"
+                                  placeholder="Add any additional notes about this income..."></textarea>
+                        <span class="absolute right-4 top-4 text-gray-400">
+                            <i class="fas fa-pen"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Quick Amount Buttons -->
+                <div class="group">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-bolt text-green-500"></i>
+                        Quick Amount
+                    </label>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" onclick="setAmount(500)" class="px-5 py-2 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-all">৳500</button>
+                        <button type="button" onclick="setAmount(1000)" class="px-5 py-2 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-all">৳1,000</button>
+                        <button type="button" onclick="setAmount(5000)" class="px-5 py-2 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-all">৳5,000</button>
+                        <button type="button" onclick="setAmount(10000)" class="px-5 py-2 bg-green-100 text-green-700 rounded-lg font-semibold hover:bg-green-200 transition-all">৳10,000</button>
+                        <button type="button" onclick="clearAmount()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg font-semibold hover:bg-gray-200 transition-all">Clear</button>
+                    </div>
                 </div>
 
                 <!-- Actions -->
-                <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
                     <button type="submit"
-                            class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition">
-                        <i class="fas fa-check mr-2"></i> Save Income
+                            class="flex-1 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                        <i class="fas fa-check-circle mr-2"></i> Save Income
                     </button>
                     <a href="{% url 'dashboard' %}"
-                       class="flex-1 border border-gray-300 py-3 rounded-xl text-center font-semibold text-gray-700 hover:bg-gray-100 transition">
-                        Cancel
+                       class="flex-1 border-2 border-gray-200 py-4 rounded-xl text-center font-semibold text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all">
+                        <i class="fas fa-times mr-2"></i> Cancel
                     </a>
                 </div>
             </form>
         </div>
 
         <!-- Tips Panel -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 h-fit">
-            <h3 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
-                <i class="fas fa-lightbulb mr-2"></i> Smart Tips
-            </h3>
-            <ul class="space-y-3 text-sm text-gray-600">
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
-                    Be specific with income sources
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
-                    Add notes for better history tracking
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
-                    Enter accurate amounts
-                </li>
-            </ul>
+        <div class="space-y-6">
+            <!-- Main Tips Card -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 h-fit">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center mr-3">
+                        <i class="fas fa-lightbulb text-yellow-500"></i>
+                    </div>
+                    Smart Tips
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 p-3 bg-green-50 rounded-xl">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-check text-green-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Be Specific</p>
+                            <p class="text-sm text-gray-500">Clearly identify your income source for better tracking</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-sticky-note text-blue-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Add Notes</p>
+                            <p class="text-sm text-gray-500">Include details for future reference</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3 bg-purple-50 rounded-xl">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-bolt text-purple-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Quick Entry</p>
+                            <p class="text-sm text-gray-500">Use quick buttons for common amounts</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Recent Stats Card -->
+            <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-line mr-2"></i> This Month
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="opacity-80">Total Income</span>
+                        <span class="text-2xl font-bold">৳0.00</span>
+                    </div>
+                    <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                        <div class="h-full bg-white rounded-full w-3/4"></div>
+                    </div>
+                    <p class="text-sm opacity-70">Keep tracking your income daily!</p>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
+                <div class="space-y-2">
+                    <a href="{% url 'cash_list' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors text-gray-700">
+                        <i class="fas fa-list text-green-500 w-6"></i>
+                        <span>View All Income</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="{% url 'add_expense' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition-colors text-gray-700">
+                        <i class="fas fa-minus-circle text-red-500 w-6"></i>
+                        <span>Add Expense</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors text-gray-700">
+                        <i class="fas fa-home text-blue-500 w-6"></i>
+                        <span>Back to Dashboard</span>
+                        <i class="fas fa-chevron-right ml-auto text-gray-400 text-sm"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
     </div>
 </div>
+
+<script>
+function setAmount(amount) {
+    document.querySelector('input[name="amount"]').value = amount;
+}
+
+function clearAmount() {
+    document.querySelector('input[name="amount"]').value = '';
+}
+</script>
 {% endblock %}
