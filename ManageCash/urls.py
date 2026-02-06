@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
+    path('password-change/', views.password_change, name='password_change'),
     
     # Cash management
     path('add-cash/', views.add_cash, name='add_cash'),

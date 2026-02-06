@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -281,3 +281,42 @@ def profile(request):
         'user': request.user,
     }
     return render(request, 'ManageCash/profile.html', context)
+
+
+@login_required(login_url='login')
+def password_change(request):
+    """View for changing user password"""
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password', '')
+        new_password1 = request.POST.get('new_password1', '')
+        new_password2 = request.POST.get('new_password2', '')
+        
+        # Validation
+        if not old_password or not new_password1 or not new_password2:
+            messages.error(request, 'All password fields are required!')
+            return render(request, 'ManageCash/password_change.html')
+        
+        if new_password1 != new_password2:
+            messages.error(request, 'New passwords do not match!')
+            return render(request, 'ManageCash/password_change.html')
+        
+        if len(new_password1) < 8:
+            messages.error(request, 'Password must be at least 8 characters long!')
+            return render(request, 'ManageCash/password_change.html')
+        
+        # Check old password
+        if not request.user.check_password(old_password):
+            messages.error(request, 'Current password is incorrect!')
+            return render(request, 'ManageCash/password_change.html')
+        
+        # Change password
+        request.user.set_password(new_password1)
+        request.user.save()
+        
+        # Update session to keep user logged in
+        update_session_auth_hash(request, request.user)
+        
+        messages.success(request, 'Password changed successfully!')
+        return redirect('dashboard')
+    
+    return render(request, 'ManageCash/password_change.html')
