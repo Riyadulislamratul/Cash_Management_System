@@ -3,144 +3,198 @@
 {% block title %}Dashboard - Cash Manager{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-8">
     <!-- Welcome Banner -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-8 text-white">
-        <h1 class="text-4xl font-bold mb-2">Welcome, {{ user.first_name|default:user.username }}!</h1>
-        <p class="text-blue-100">Manage your cash flow efficiently</p>
+    <div class="relative overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 rounded-2xl shadow-2xl p-8 text-white">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl font-bold mb-2">Welcome back, {{ user.first_name|default:user.username }}! 👋</h1>
+            <p class="text-purple-100 text-lg">Here's what's happening with your finances today</p>
+        </div>
     </div>
 
-    <!-- Key Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Total Added -->
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-semibold uppercase">Total Income</p>
-                    <p class="text-3xl font-bold text-green-600 mt-2">৳{{ total_added|floatformat:2 }}</p>
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Income -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-green-400/20 to-emerald-500/20 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
+                        <i class="fas fa-arrow-trend-up text-white text-lg"></i>
+                    </div>
+                    <span class="text-green-500 text-sm font-medium bg-green-50 dark:bg-green-500/10 px-3 py-1 rounded-full">Income</span>
                 </div>
-                <i class="fas fa-arrow-up text-4xl text-green-200"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wide">Total Income</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">৳{{ total_added|floatformat:2 }}</p>
             </div>
         </div>
 
-        <!-- Total Spent -->
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-semibold uppercase">Total Expenses</p>
-                    <p class="text-3xl font-bold text-red-600 mt-2">৳{{ total_spent|floatformat:2 }}</p>
+        <!-- Total Expenses -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-400/20 to-rose-500/20 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
+                        <i class="fas fa-arrow-trend-down text-white text-lg"></i>
+                    </div>
+                    <span class="text-red-500 text-sm font-medium bg-red-50 dark:bg-red-500/10 px-3 py-1 rounded-full">Expense</span>
                 </div>
-                <i class="fas fa-arrow-down text-4xl text-red-200"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wide">Total Expenses</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">৳{{ total_spent|floatformat:2 }}</p>
             </div>
         </div>
 
         <!-- Balance -->
-        <div
-            class="bg-white rounded-lg shadow p-6 border-l-4 {% if balance >= 0 %}border-blue-500{% else %}border-red-500{% endif %}">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-semibold uppercase">Balance</p>
-                    <p
-                        class="text-3xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %} mt-2">
-                        ৳{{ balance|floatformat:2 }}</p>
+        <div class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br {% if balance >= 0 %}from-blue-400/20 to-cyan-500/20{% else %}from-orange-400/20 to-red-500/20{% endif %} rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br {% if balance >= 0 %}from-blue-500 to-cyan-600{% else %}from-orange-500 to-red-500{% endif %} rounded-xl flex items-center justify-center shadow-lg {% if balance >= 0 %}shadow-blue-500/30{% else %}shadow-orange-500/30{% endif %}">
+                        <i class="fas fa-wallet text-white text-lg"></i>
+                    </div>
+                    <span class="{% if balance >= 0 %}text-blue-500{% else %}text-orange-500{% endif %} text-sm font-medium {% if balance >= 0 %}bg-blue-50 dark:bg-blue-500/10{% else %}bg-orange-50 dark:bg-orange-500/10{% endif %} px-3 py-1 rounded-full">{% if balance >= 0 %}Positive{% else %}Negative{% endif %}</span>
                 </div>
-                <i
-                    class="fas fa-wallet text-4xl {% if balance >= 0 %}text-blue-200{% else %}text-red-200{% endif %}"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wide">Current Balance</p>
+                <p class="text-3xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-orange-600{% endif %} dark:text-white mt-1">৳{{ balance|floatformat:2 }}</p>
             </div>
         </div>
 
-        <!-- Transaction Count -->
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-semibold uppercase">Total Transactions</p>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">{{ cash_additions_count|add:expenses_count }}</p>
+        <!-- Transactions -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-violet-400/20 to-purple-500/20 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/30">
+                        <i class="fas fa-list-check text-white text-lg"></i>
+                    </div>
+                    <span class="text-violet-500 text-sm font-medium bg-violet-50 dark:bg-violet-500/10 px-3 py-1 rounded-full">Total</span>
                 </div>
-                <i class="fas fa-exchange-alt text-4xl text-purple-200"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wide">Transactions</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ cash_additions_count|add:expenses_count }}</p>
             </div>
         </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="{% url 'add_cash' %}"
-            class="bg-green-600 hover:bg-green-700 text-white rounded-lg shadow p-6 transition transform hover:scale-105">
-            <div class="flex items-center space-x-4">
-                <i class="fas fa-plus-circle text-4xl"></i>
-                <div>
-                    <p class="text-sm font-semibold opacity-90">Add Income</p>
-                    <p class="text-2xl font-bold">Record Money Received</p>
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <a href="{% url 'add_cash' %}" class="group relative overflow-hidden bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+            <div class="relative flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-plus-circle text-3xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-emerald-100 text-sm font-medium">Quick Action</p>
+                        <p class="text-2xl font-bold">Add Income</p>
+                    </div>
                 </div>
+                <i class="fas fa-arrow-right text-3xl text-white/30 group-hover:text-white/60 transition-colors"></i>
             </div>
         </a>
 
-        <a href="{% url 'add_expense' %}"
-            class="bg-red-600 hover:bg-red-700 text-white rounded-lg shadow p-6 transition transform hover:scale-105">
-            <div class="flex items-center space-x-4">
-                <i class="fas fa-minus-circle text-4xl"></i>
-                <div>
-                    <p class="text-sm font-semibold opacity-90">Add Expense</p>
-                    <p class="text-2xl font-bold">Record Money Spent</p>
+        <a href="{% url 'add_expense' %}" class="group relative overflow-hidden bg-gradient-to-r from-rose-500 to-red-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+            <div class="relative flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-minus-circle text-3xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-rose-100 text-sm font-medium">Quick Action</p>
+                        <p class="text-2xl font-bold">Add Expense</p>
+                    </div>
                 </div>
+                <i class="fas fa-arrow-right text-3xl text-white/30 group-hover:text-white/60 transition-colors"></i>
             </div>
         </a>
-    
+    </div>
 
     <!-- Recent Transactions -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Income -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-800">Recent Income</h2>
-                <a href="{% url 'cash_list' %}" class="text-green-600 hover:text-green-700 text-sm font-semibold">View
-                    All</a>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-arrow-trend-up text-white"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Recent Income</h2>
+                </div>
+                <a href="{% url 'cash_list' %}" class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm font-semibold flex items-center gap-1 transition-colors">
+                    View All <i class="fas fa-arrow-right text-xs"></i>
+                </a>
             </div>
 
             {% if recent_added %}
             <div class="space-y-4">
                 {% for cash in recent_added %}
-                <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                    <div class="flex items-center space-x-4">
-                        <i class="fas fa-arrow-up text-2xl text-green-600"></i>
+                <div class="group flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-500/5 dark:to-emerald-500/5 rounded-xl border border-green-100 dark:border-green-500/10 hover:border-green-300 dark:hover:border-green-500/30 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas fa-arrow-up text-green-600 dark:text-green-400"></i>
+                        </div>
                         <div>
-                            <p class="font-semibold text-gray-800">{{ cash.source }}</p>
-                            <p class="text-sm text-gray-600">{{ cash.datetime|date:"M d, Y H:i" }}</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">{{ cash.source }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ cash.datetime|date:"M d, Y • h:i A" }}</p>
                         </div>
                     </div>
-                    <p class="text-lg font-bold text-green-600">+৳{{ cash.amount|floatformat:2 }}</p>
+                    <p class="text-lg font-bold text-green-600 dark:text-green-400">+৳{{ cash.amount|floatformat:2 }}</p>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="text-gray-500 text-center py-8">No income recorded yet</p>
+            <div class="text-center py-12">
+                <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-wallet text-gray-400 text-2xl"></i>
+                </div>
+                <p class="text-gray-500 dark:text-gray-400">No income recorded yet</p>
+                <a href="{% url 'add_cash' %}" class="inline-block mt-4 text-green-600 hover:text-green-700 font-semibold">Add your first income →</a>
+            </div>
             {% endif %}
         </div>
 
         <!-- Recent Expenses -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-800">Recent Expenses</h2>
-                <a href="{% url 'expense_list' %}" class="text-red-600 hover:text-red-700 text-sm font-semibold">View
-                    All</a>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-arrow-trend-down text-white"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Recent Expenses</h2>
+                </div>
+                <a href="{% url 'expense_list' %}" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-semibold flex items-center gap-1 transition-colors">
+                    View All <i class="fas fa-arrow-right text-xs"></i>
+                </a>
             </div>
 
             {% if recent_expenses %}
             <div class="space-y-4">
                 {% for expense in recent_expenses %}
-                <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-                    <div class="flex items-center space-x-4">
-                        <i class="fas fa-arrow-down text-2xl text-red-600"></i>
+                <div class="group flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-500/5 dark:to-rose-500/5 rounded-xl border border-red-100 dark:border-red-500/10 hover:border-red-300 dark:hover:border-red-500/30 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-500/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas fa-arrow-down text-red-600 dark:text-red-400"></i>
+                        </div>
                         <div>
-                            <p class="font-semibold text-gray-800">{{ expense.description|truncatewords:3 }}</p>
-                            <p class="text-sm text-gray-600">{{ expense.datetime|date:"M d, Y H:i" }}</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">{{ expense.description|truncatewords:3 }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ expense.datetime|date:"M d, Y • h:i A" }}</p>
                         </div>
                     </div>
-                    <p class="text-lg font-bold text-red-600">-৳{{ expense.amount|floatformat:2 }}</p>
+                    <p class="text-lg font-bold text-red-600 dark:text-red-400">-৳{{ expense.amount|floatformat:2 }}</p>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="text-gray-500 text-center py-8">No expenses recorded yet</p>
+            <div class="text-center py-12">
+                <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-receipt text-gray-400 text-2xl"></i>
+                </div>
+                <p class="text-gray-500 dark:text-gray-400">No expenses recorded yet</p>
+                <a href="{% url 'add_expense' %}" class="inline-block mt-4 text-red-600 hover:text-red-700 font-semibold">Add your first expense →</a>
+            </div>
             {% endif %}
         </div>
     </div>
