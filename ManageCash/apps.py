@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class ManagecashConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'ManageCash'
+    
+    def ready(self):
+        import ManageCash.signals

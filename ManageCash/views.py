@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Sum, Q
 from django.views.decorators.http import require_http_methods
-from .models import AddCash, Expense
+from .models import AddCash, Expense, Profile
 
 
 def register(request):
@@ -253,6 +253,12 @@ def delete_expense(request, pk):
 @login_required(login_url='login')
 def profile(request):
     """View for managing user profile"""
+    # Get profile using Django's reverse relation (this ensures it works even if not created yet)
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
+    
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
@@ -261,12 +267,12 @@ def profile(request):
         # Validate
         if not email:
             messages.error(request, 'Email is required!')
-            return render(request, 'ManageCash/profile.html')
+            return render(request, 'ManageCash/profile.html', {'profile': profile})
         
         # Check if email already exists for another user
         if User.objects.filter(email=email).exclude(pk=request.user.pk).exists():
             messages.error(request, 'Email already in use!')
-            return render(request, 'ManageCash/profile.html')
+            return render(request, 'ManageCash/profile.html', {'profile': profile})
         
         # Update user profile
         request.user.first_name = first_name
@@ -274,11 +280,24 @@ def profile(request):
         request.user.email = email
         request.user.save()
         
+        # Handle profile picture
+        if 'profile_picture' in request.FILES:
+            profile.profile_picture = request.FILES['profile_picture']
+            profile.save()
+        
+        # Handle remove profile picture
+        if 'remove_profile_picture' in request.POST:
+            if profile.profile_picture and profile.profile_picture.name != 'default.png':
+                profile.profile_picture.delete()
+                profile.profile_picture = 'default.png'
+                profile.save()
+        
         messages.success(request, 'Profile updated successfully!')
         return redirect('profile')
     
     context = {
         'user': request.user,
+        'profile': profile,
     }
     return render(request, 'ManageCash/profile.html', context)
 
