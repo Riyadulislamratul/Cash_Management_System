@@ -253,7 +253,7 @@ def delete_expense(request, pk):
 @login_required(login_url='login')
 def profile(request):
     """View for managing user profile"""
-    # Get profile using Django's reverse relation (this ensures it works even if not created yet)
+    # Get profile using Django's reverse relation
     try:
         profile = request.user.profile
     except Profile.DoesNotExist:
@@ -280,18 +280,19 @@ def profile(request):
         request.user.email = email
         request.user.save()
         
-        # Handle profile picture
+        # Handle profile picture upload
         if 'profile_picture' in request.FILES:
-            profile.profile_picture = request.FILES['profile_picture']
-            profile.save()
+            uploaded_file = request.FILES['profile_picture']
+            profile.profile_picture.save(uploaded_file.name, uploaded_file, save=True)
+            print(f"Profile picture saved: {profile.profile_picture.name}")
         
         # Handle remove profile picture
         if 'remove_profile_picture' in request.POST:
-            if profile.profile_picture and profile.profile_picture.name != 'default.png':
-                profile.profile_picture.delete()
-                profile.profile_picture = 'default.png'
+            if profile.profile_picture:
+                profile.profile_picture.delete(save=True)
+                profile.profile_picture = None
                 profile.save()
-        
+            
         messages.success(request, 'Profile updated successfully!')
         return redirect('profile')
     

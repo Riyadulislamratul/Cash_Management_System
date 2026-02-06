@@ -11,10 +11,10 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'{self.user.username} Profile'
-
+    
     @property
     def has_profile_picture(self):
-        return bool(self.profile_picture and self.profile_picture.name)
+        return bool(self.profile_picture and hasattr(self.profile_picture, 'url'))
 
 
 class AddCash(models.Model):

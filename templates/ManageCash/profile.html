@@ -8,19 +8,19 @@
     <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
         <div class="bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-12">
             <div class="flex items-center gap-6">
-                <!-- Profile Picture Upload -->
+                <!-- Profile Picture Display (Header) -->
                 <div class="relative group">
                     <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white/30 overflow-hidden">
                         {% if profile.has_profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" alt="Profile" class="w-full h-full object-cover">
+                            <img id="header_preview" src="{{ profile.profile_picture.url }}" alt="Profile" class="w-full h-full object-cover">
                         {% else %}
-                            <span class="text-4xl font-bold text-white">{{ user.username|upper|slice:2 }}</span>
+                            <span id="header_preview" class="text-4xl font-bold text-white">{{ user.username|upper|slice:2 }}</span>
                         {% endif %}
                     </div>
-                    <label for="profile_picture" class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer shadow-lg text-indigo-600 hover:bg-gray-100 transition-colors">
+                    <label for="header_profile_picture" class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer shadow-lg text-indigo-600 hover:bg-gray-100 transition-colors">
                         <i class="fas fa-camera text-sm"></i>
                     </label>
-                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    <input type="file" id="header_profile_picture" name="profile_picture" accept="image/*" class="hidden" onchange="previewImageHeader(event)">
                 </div>
                 <div class="text-white">
                     <h1 class="text-3xl font-bold">{{ user.first_name|default:user.username }} {{ user.last_name|default:"" }}</h1>
@@ -87,17 +87,17 @@
                     <!-- Current/Preview Image -->
                     <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-3 border-indigo-200">
                         {% if profile.has_profile_picture %}
-                            <img id="preview" src="{{ profile.profile_picture.url }}" alt="Profile" class="w-full h-full object-cover">
+                            <img id="form_preview" src="{{ profile.profile_picture.url }}" alt="Profile" class="w-full h-full object-cover">
                         {% else %}
-                            <span id="preview" class="text-2xl font-bold text-gray-400">{{ user.username|upper|slice:2 }}</span>
+                            <span id="form_preview" class="text-2xl font-bold text-gray-400">{{ user.username|upper|slice:2 }}</span>
                         {% endif %}
                     </div>
                     <div class="flex-1">
-                        <label for="profile_picture" class="cursor-pointer inline-flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors">
+                        <label for="form_profile_picture" class="cursor-pointer inline-flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors">
                             <i class="fas fa-upload text-indigo-600"></i>
                             <span class="text-sm text-gray-700">Choose new photo</span>
                         </label>
-                        <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="hidden" onchange="previewImage(event)">
+                        <input type="file" id="form_profile_picture" name="profile_picture" accept="image/*" class="hidden" onchange="previewImageForm(event)">
                         <p class="text-gray-500 text-xs mt-2">JPG, PNG, or GIF. Max 5MB.</p>
                         {% if profile.has_profile_picture %}
                             <label class="inline-flex items-center gap-2 mt-3 text-red-600 hover:text-red-700 cursor-pointer">
@@ -215,15 +215,38 @@
 </div>
 
 <script>
-function previewImage(event) {
+function previewImageHeader(event) {
     const input = event.target;
-    const preview = document.getElementById('preview');
+    const preview = document.getElementById('header_preview');
+    const formPreview = document.getElementById('form_preview');
     
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         
         reader.onload = function(e) {
             preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            if (formPreview) {
+                formPreview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            }
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function previewImageForm(event) {
+    const input = event.target;
+    const preview = document.getElementById('form_preview');
+    const headerPreview = document.getElementById('header_preview');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            if (headerPreview) {
+                headerPreview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+            }
         }
         
         reader.readAsDataURL(input.files[0]);
