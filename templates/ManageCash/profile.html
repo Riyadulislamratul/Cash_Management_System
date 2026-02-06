@@ -4,79 +4,171 @@
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-8 text-white mb-6">
-        <h1 class="text-4xl font-bold">User Profile</h1>
-        <p class="text-blue-100 mt-2">Manage your account information</p>
+    <!-- Profile Header Card -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+        <div class="bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-12">
+            <div class="flex items-center gap-6">
+                <!-- Avatar -->
+                <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white/30">
+                    <span class="text-4xl font-bold text-white">{{ user.username|upper|slice:2 }}</span>
+                </div>
+                <div class="text-white">
+                    <h1 class="text-3xl font-bold">{{ user.first_name|default:user.username }} {{ user.last_name|default:"" }}</h1>
+                    <p class="text-violet-200 mt-1">@{{ user.username }}</p>
+                    <p class="text-violet-200 text-sm mt-2">
+                        <i class="fas fa-calendar-alt mr-2"></i>Member since {{ user.date_joined|date:"F d, Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 gap-px bg-gray-200">
+            <div class="bg-white p-6 text-center hover:bg-gray-50 transition-colors">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 mb-3">
+                    <i class="fas fa-arrow-down text-green-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm font-medium">Income Entries</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ cash_additions_count|default:0 }}</p>
+            </div>
+            <div class="bg-white p-6 text-center hover:bg-gray-50 transition-colors">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-3">
+                    <i class="fas fa-arrow-up text-red-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm font-medium">Expense Entries</p>
+                <p class="text-3xl font-bold text-gray-800 mt-1">{{ expenses_count|default:0 }}</p>
+            </div>
+        </div>
     </div>
 
+    <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
-            <div class="mb-4 p-4 rounded-lg {% if message.tags %}bg-{{ message.tags }}-100 border border-{{ message.tags }}-400 text-{{ message.tags }}-700{% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}">
-                {{ message }}
+            <div class="mb-4 p-4 rounded-lg border-l-4 {% if message.tags == 'success' %}bg-green-50 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-50 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-50 border-yellow-500 text-yellow-700{% else %}bg-blue-50 border-blue-500 text-blue-700{% endif %}">
+                <div class="flex items-center gap-3">
+                    <i class="{% if message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'error' %}fas fa-exclamation-circle{% elif message.tags == 'warning' %}fas fa-exclamation-triangle{% else %}fas fa-info-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
             </div>
         {% endfor %}
     {% endif %}
 
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <form method="POST" class="space-y-6">
+    <!-- Edit Profile Form -->
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                <i class="fas fa-user-edit text-indigo-600"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">Edit Profile</h2>
+                <p class="text-gray-500 text-sm">Update your account information</p>
+            </div>
+        </div>
+
+        <form method="POST" class="space-y-5">
             {% csrf_token %}
 
             <!-- Username (Read-only) -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 font-semibold">
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <i class="fas fa-at mr-2 text-gray-400"></i>Username
+                </label>
+                <div class="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 font-semibold flex items-center gap-2">
+                    <i class="fas fa-lock text-gray-400"></i>
                     {{ user.username }}
+                    <span class="text-xs text-gray-400 ml-auto">Cannot be changed</span>
                 </div>
-                <p class="text-gray-500 text-xs mt-1">Username cannot be changed</p>
             </div>
 
             <!-- Email -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                <input type="email" name="email" required value="{{ user.email }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email">
-            </div>
-
-            <!-- First Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your first name">
-            </div>
-
-            <!-- Last Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your last name">
-            </div>
-
-            <!-- Member Since -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Member Since</label>
-                <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
-                    {{ user.date_joined|date:"F d, Y" }}
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <i class="fas fa-envelope mr-2 text-gray-400"></i>Email Address *
+                </label>
+                <div class="relative">
+                    <input type="email" name="email" required value="{{ user.email }}" 
+                        class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        placeholder="Enter your email">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-gray-400"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- Submit Button -->
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
-                    <i class="fas fa-save mr-2"></i>Save Changes
+            <!-- Name Fields Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- First Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-user mr-2 text-gray-400"></i>First Name
+                    </label>
+                    <div class="relative">
+                        <input type="text" name="first_name" value="{{ user.first_name }}" 
+                            class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="Enter first name">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-id-card text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-user mr-2 text-gray-400"></i>Last Name
+                    </label>
+                    <div class="relative">
+                        <input type="text" name="last_name" value="{{ user.last_name }}" 
+                            class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="Enter last name">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-id-card text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Since (Read-only) -->
+            <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                <label class="block text-sm font-medium text-indigo-700 mb-1">
+                    <i class="fas fa-calendar-check mr-2 text-indigo-400"></i>Account Created
+                </label>
+                <div class="w-full px-4 py-2 bg-white border border-indigo-200 rounded-lg text-indigo-600 font-semibold flex items-center gap-2">
+                    <i class="fas fa-history text-indigo-400"></i>
+                    {{ user.date_joined|date:"F d, Y" }} at {{ user.date_joined|time:"h:i A" }}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Save Changes
                 </button>
-                <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-200 text-center">
-                    <i class="fas fa-times mr-2"></i>Cancel
+                <a href="{% url 'dashboard' %}" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 border border-gray-300">
+                    <i class="fas fa-times"></i>
+                    Cancel
                 </a>
             </div>
         </form>
     </div>
 
-    <!-- Account Statistics -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <p class="text-gray-600 text-sm font-semibold">Total Income Entries</p>
-            <p class="text-3xl font-bold text-green-600 mt-2">{{ cash_additions_count|default:0 }}</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-            <p class="text-gray-600 text-sm font-semibold">Total Expense Entries</p>
-            <p class="text-3xl font-bold text-red-600 mt-2">{{ expenses_count|default:0 }}</p>
+    <!-- Password Change Link -->
+    <div class="mt-6 bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                    <i class="fas fa-key text-amber-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Password</h3>
+                    <p class="text-gray-500 text-sm">Change your password for security</p>
+                </div>
+            </div>
+            <a href="{% url 'password_change' %}" class="bg-amber-100 hover:bg-amber-200 text-amber-700 font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fas fa-edit"></i>
+                Change
+            </a>
         </div>
     </div>
 </div>
